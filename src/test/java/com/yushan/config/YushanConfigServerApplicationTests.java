@@ -6,7 +6,7 @@ import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
 @TestPropertySource(properties = {
-    "spring.cloud.config.server.git.uri=https://github.com/maugus0/yushan-config-server.git",
+    "spring.cloud.config.server.git.uri=https://github.com/phutruonnttn/yushan-microservices-config-server.git",
     "eureka.client.enabled=false"
 })
 class YushanConfigServerApplicationTests {
