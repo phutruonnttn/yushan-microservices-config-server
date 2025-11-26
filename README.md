@@ -253,13 +253,46 @@ Config Server exposes metrics through:
 
 This project is part of the Yushan Platform ecosystem.
 
+## Testing
+
+### Unit Tests
+
+The Config Server includes unit tests to verify the Spring context loads successfully:
+
+```bash
+# Run tests
+./mvnw test
+```
+
+## Security
+
+### Vulnerability Fixes
+
+- ✅ **CVE-2025-48924 Fixed**: Excluded vulnerable `commons-lang:commons-lang@2.6` from `spring-cloud-starter-netflix-eureka-client` dependency
+- ✅ **Security Scanning**: CI/CD pipeline includes OWASP Dependency Check and Snyk vulnerability scanning
+
+## CI/CD Pipeline
+
+The Config Server includes a comprehensive CI/CD pipeline with:
+
+- ✅ **Unit Tests**: JUnit 5 tests for application context loading
+- ✅ **Code Quality**: SpotBugs static analysis, Checkstyle code style checks
+- ✅ **Code Coverage**: JaCoCo coverage reports
+- ✅ **Security Scanning**: OWASP Dependency Check and Snyk vulnerability scanning
+- ✅ **Container Scanning**: Trivy container vulnerability scanning
+- ✅ **Quality Gates**: SonarCloud analysis and quality gates
+- ✅ **Docker Build**: Automated Docker image building and pushing to GitHub Container Registry
+
 ## 🔗 Links
 
 - **Service Registry**: [yushan-microservices-service-registry](https://github.com/phutruonnttn/yushan-microservices-service-registry)
 - **API Gateway**: [yushan-microservices-api-gateway](https://github.com/phutruonnttn/yushan-microservices-api-gateway)
 - **Platform Documentation**: [yushan-platform-docs](https://github.com/phutruonnttn/yushan-platform-docs) - Complete documentation for all phases
 - **Phase 2 Architecture**: See [Phase 2 Microservices Architecture](https://github.com/phutruonnttn/yushan-platform-docs/blob/main/docs/phase2-microservices/PHASE2_MICROSERVICES_ARCHITECTURE.md)
+- **Phase 3 Architecture**: See [Phase 3 Kubernetes README](https://github.com/phutruonnttn/yushan-platform-docs/blob/main/docs/phase3-kubernetes/README.md)
 
 ---
 
 **Yushan Config Server** - Centralized configuration management for microservices ⚙️
+
+*Last Updated: November 2025*
