@@ -7,9 +7,14 @@ spring:
   cloud:
     config:
       server:
-        # Native Backend (for local development/testing)
-        native:
-          search-locations: classpath:/configs,file:./configs
-        # Disable Git backend completely
+        # Git Backend - Read configs from GitHub repository
         git:
-          enabled: false
+          uri: ${CONFIG_REPO_URI:https://github.com/phutruonnttn/yushan-microservices-config-data.git}
+          search-paths: configs
+          default-label: main
+          # Refresh rate: fetch new configs every 300 seconds
+          refresh-rate: 300
+          # Clone on startup (ensures latest configs are available)
+          clone-on-start: true
+          # Force pull on refresh
+          force-pull: true

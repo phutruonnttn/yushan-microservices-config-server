@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Config Files (now stored in separate Git repo) ###
+configs/

@@ -19,9 +19,6 @@ RUN ./mvnw dependency:go-offline -B
 # Copy source code
 COPY src src
 
-# Copy config files
-COPY configs configs
-
 # Copy checkstyle.xml for code quality checks
 COPY checkstyle.xml checkstyle.xml
 
@@ -36,9 +33,6 @@ WORKDIR /app
 
 # Copy the JAR file from builder stage
 COPY --from=builder /app/target/config-server-*.jar app.jar
-
-# Copy config files from builder stage
-COPY --from=builder /app/configs configs
 
 # Expose port
 EXPOSE 8888
