@@ -22,6 +22,9 @@ COPY src src
 # Copy config files
 COPY configs configs
 
+# Copy checkstyle.xml for code quality checks
+COPY checkstyle.xml checkstyle.xml
+
 # Build the application
 RUN ./mvnw clean package -DskipTests
 
