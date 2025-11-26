@@ -264,6 +264,13 @@ The Config Server includes unit tests to verify the Spring context loads success
 ./mvnw test
 ```
 
+## Security
+
+### Vulnerability Fixes
+
+- ✅ **CVE-2025-48924 Fixed**: Excluded vulnerable `commons-lang:commons-lang@2.6` from `spring-cloud-starter-netflix-eureka-client` dependency
+- ✅ **Security Scanning**: CI/CD pipeline includes OWASP Dependency Check and Snyk vulnerability scanning
+
 ## CI/CD Pipeline
 
 The Config Server includes a comprehensive CI/CD pipeline with:
