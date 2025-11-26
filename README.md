@@ -4,7 +4,7 @@
 
 ## 📋 Overview
 
-Yushan Config Server is a Spring Cloud Config Server that provides centralized configuration for all microservices in the Yushan system. This server uses the native profile to read configuration from the local `configs/` directory.
+Yushan Config Server is a Spring Cloud Config Server that provides centralized configuration for all microservices in the Yushan system. This server uses **Git Backend** to read configuration from the GitHub repository [yushan-microservices-config-data](https://github.com/phutruonnttn/yushan-microservices-config-data).
 
 ## 🚀 Tech Stack
 
@@ -17,31 +17,45 @@ Yushan Config Server is a Spring Cloud Config Server that provides centralized c
 ## ✨ Features
 
 - Centralized configuration management
-- Native profile (read from local directory)
+- **Git Backend** - Read configs from GitHub repository
 - Service discovery via Eureka
 - Environment-specific configurations
-- Automatic configuration refresh (with Spring Cloud Bus - optional)
+- Automatic config refresh (fetches latest from Git every 5 minutes)
+- Version control for all configurations
+
+## 🏗️ Architecture
+
+```
+Business Services → Config Server (API) → Config Repo (GitHub)
+```
+
+**Config Repo**: [yushan-microservices-config-data](https://github.com/phutruonnttn/yushan-microservices-config-data)
+- Stores all configuration files
+- Version controlled with Git
+- Can be edited directly on GitHub
+
+**Config Server**: This repository
+- Reads configs from Git repo
+- Serves configs via REST API
+- Automatically fetches latest configs from Git
 
 ## 🏗️ Project Structure
 
 ```
 yushan-config-server/
-├── configs/                    # Configuration directory
-│   ├── user-service.yml
-│   ├── content-service.yml
-│   ├── engagement-service.yml
-│   ├── gamification-service.yml
-│   └── analytics-service.yml
 ├── src/
 │   └── main/
 │       ├── java/
 │       │   └── com/yushan/config/
-│       │       └── ConfigServerApplication.java
+│       │       └── YushanConfigServerApplication.java
 │       └── resources/
-│           └── application.yml
+│           ├── application.yml
+│           └── application-docker.yml
 ├── Dockerfile
 ├── docker-compose.yml
 └── pom.xml
+
+Note: Config files are stored in separate Git repo: yushan-microservices-config-data
 ```
 
 ## 🚦 Getting Started
@@ -52,18 +66,18 @@ yushan-config-server/
 - Maven 3.8+
 - Eureka Service Registry running on port 8761
 
-### Run with Native Profile (Recommended for Local)
+### Run Locally
 
 ```bash
 # Clone repository
 git clone https://github.com/phutruonnttn/yushan-microservices-config-server.git
 cd yushan-microservices-config-server
 
-# Run with native profile
-./mvnw spring-boot:run -Dspring-boot.run.profiles=native
+# Run Config Server
+./mvnw spring-boot:run
 ```
 
-Config server will run on port **8888**.
+Config server will run on port **8888** and automatically fetch configs from Git repo.
 
 ### Run with Docker
 
@@ -96,13 +110,17 @@ server:
 spring:
   application:
     name: config-server
-  profiles:
-    active: native  # Use native profile
   cloud:
     config:
       server:
-        native:
-          search-locations: classpath:/configs  # Read from configs/ directory
+        # Git Backend - Read configs from GitHub repository
+        git:
+          uri: ${CONFIG_REPO_URI:https://github.com/phutruonnttn/yushan-microservices-config-data.git}
+          search-paths: configs
+          default-label: main
+          refresh-rate: 300  # Fetch new configs every 5 minutes
+          clone-on-start: true
+          force-pull: true
 
 eureka:
   client:
@@ -112,6 +130,8 @@ eureka:
 
 ### Configuration File Structure
 
+Config files are stored in the separate Git repository: [yushan-microservices-config-data](https://github.com/phutruonnttn/yushan-microservices-config-data)
+
 Each service has its own configuration file in the `configs/` directory:
 
 - `user-service.yml` - Configuration for User Service
@@ -119,6 +139,13 @@ Each service has its own configuration file in the `configs/` directory:
 - `engagement-service.yml` - Configuration for Engagement Service
 - `gamification-service.yml` - Configuration for Gamification Service
 - `analytics-service.yml` - Configuration for Analytics Service
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `CONFIG_REPO_URI` | Git repository URL for configs | `https://github.com/phutruonnttn/yushan-microservices-config-data.git` |
+| `EUREKA_URL` | Eureka server URL | `http://localhost:8761/eureka/` |
 
 ### Example: user-service.yml
 
@@ -202,8 +229,9 @@ Open http://localhost:8761 and look for `CONFIG-SERVER` in the list of registere
 
 **Solution:**
 1. Check if port 8888 is already in use
-2. Check if `configs/` directory exists and contains YAML files
-3. View logs for specific errors
+2. Check network connectivity to GitHub (Config Server needs to clone Git repo)
+3. Verify `CONFIG_REPO_URI` environment variable is correct
+4. View logs for specific errors (check Git clone messages)
 
 ### Issue: Microservices Can't Fetch Configuration
 
@@ -285,6 +313,7 @@ The Config Server includes a comprehensive CI/CD pipeline with:
 
 ## 🔗 Links
 
+- **Config Repository**: [yushan-microservices-config-data](https://github.com/phutruonnttn/yushan-microservices-config-data) - Git repository storing all configuration files
 - **Service Registry**: [yushan-microservices-service-registry](https://github.com/phutruonnttn/yushan-microservices-service-registry)
 - **API Gateway**: [yushan-microservices-api-gateway](https://github.com/phutruonnttn/yushan-microservices-api-gateway)
 - **Platform Documentation**: [yushan-platform-docs](https://github.com/phutruonnttn/yushan-platform-docs) - Complete documentation for all phases
